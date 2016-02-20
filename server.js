@@ -24,8 +24,8 @@ mongo.connect(mongoUrl, function(err, db) {
         });
     }
     
-    function search(url, res) {
-        Search.images(url, {top: 10},
+    function search(url, res, size) {
+        Search.images(url, {top: size},
             function(err, results) {
                 if(err) throw err;
                 res.send(util.inspect(results, {colors: true, depth: null}));
@@ -61,7 +61,7 @@ mongo.connect(mongoUrl, function(err, db) {
         var size = req.url.offset || 10;
         if(req.url != '/favicon.ico') {
             if(url == "latest" || url == "latest/") latest(res);
-            else search(url, res);
+            else search(url, res, size);
         }
     });
     app.listen(8081);
