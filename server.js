@@ -28,7 +28,7 @@ mongo.connect(mongoUrl, function(err, db) {
         Search.images(url, {top: 10},
             function(err, results) {
                 if(err) throw err;
-                res.write(util.inspect(results, {colors: true, depth: null}));
+                res.send(util.inspect(results, {colors: true, depth: null}));
             }
         );
         log(url);
@@ -36,12 +36,19 @@ mongo.connect(mongoUrl, function(err, db) {
     
     function latest(res) {
         var searches = db.collection('searches').find().limit(10).sort({_id:-1});
-        searches.each(function(err, doc) {
+        /*
+        searches.forEach(function(err, doc) {
             if(err) throw err;
-            if(doc != null) {
-                res.write(JSON.stringify(doc) + "\n");
-            }
+            if(doc != null) res.write(JSON.stringify(doc) + "\n");
+            else res.end();
         });
+        */
+        searches.forEach(function(doc) {
+            res.write(JSON.stringify(doc) + "\n");
+        }, function(err) {
+            if(err) throw err;
+            res.end();
+        })
     }
     
     app.get('/:query', function(req, res) {
