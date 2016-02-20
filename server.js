@@ -37,18 +37,23 @@ mongo.connect(mongoUrl, function(err, db) {
     function latest(res) {
         var searches = db.collection('searches').find().limit(10).sort({_id:-1});
         /*
-        searches.forEach(function(err, doc) {
+        searches.each(function(err, doc) {
             if(err) throw err;
             if(doc != null) res.write(JSON.stringify(doc) + "\n");
             else res.end();
         });
-        */
+        
         searches.forEach(function(doc) {
             res.write(JSON.stringify(doc) + "\n");
         }, function(err) {
             if(err) throw err;
             res.end();
         })
+        */
+        searches.toArray(function(err, docs) {
+            if (err) throw err;
+            res.end(JSON.stringify(docs));
+        });
     }
     
     app.get('/:query', function(req, res) {
