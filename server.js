@@ -58,14 +58,10 @@ mongo.connect(mongoUrl, function(err, db) {
     
     app.get('/:query', function(req, res) {
         var url = req.params.query;
+        var size = req.url.offset || 10;
         if(req.url != '/favicon.ico') {
-            if(url == "latest" || url == "latest/") {
-                latest(res);
-            } else {
-                url = url.toString();
-                console.log(url);
-                search(url, res);
-            }
+            if(url == "latest" || url == "latest/") latest(res);
+            else search(url, res);
         }
     });
     app.listen(8081);
